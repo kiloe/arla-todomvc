@@ -13,7 +13,7 @@ Dockerfile:
 build: Dockerfile
 	docker build -t arla/todomvc .
 
-test:
+run:
 	npm install && npm run build
 	docker run \
 		-it --rm \
@@ -33,4 +33,4 @@ clean:
 	rm -rf ./node_modules
 	docker rmi arla/todomvc || echo 'ok'
 
-.PHONY: default build test release clean enter
+.PHONY: default build run release clean enter
