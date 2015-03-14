@@ -61,7 +61,7 @@ export var root = {
 			}
 		},
 		// The root users() call returns all the users that the current viewer
-		// is able to see and sets up the 'users' CTE
+		// is able to see.
 		users() {
 			return {
 				type: 'array',
@@ -89,8 +89,6 @@ export var member = {
 	edges: {
 		// The tasks() call fetches all the tasks for a member that are
 		// visible to the current viewer.
-		// Note: it is using the "from all_tasks" (the CTE created by the root
-		// entity) not "from task" (the underlying table).
 		tasks(){
 			return {
 				type: 'task',
