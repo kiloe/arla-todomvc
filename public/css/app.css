@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * base.css overrides
+ */
+
+/**
+ * We are not changing from display:none, but rather re-rendering instead.
+ * Therefore this needs to be displayed normally by default.
+ */
+#todo-list li .edit {
+  display: inline;
+}
+
+#status, #errors, #login {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.9);
+	margin: 130px 0 40px 0;
+	border: 1px solid #ccc;
+	position: relative;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
+				0 25px 50px 0 rgba(0, 0, 0, 0.15);
+}
+
+#login input, #login h2 {
+    display:block;
+    padding:5px;
+    font-size:16px;
+    margin:10px;
+    width:510px;
+}
+
+#login button {
+    padding:5px;
+    margin:10px;
+    border:1px solid #555;
+    background-color: #fafafa;
+}
+
+#login h1 {
+	position: absolute;
+	top: -120px;
+	width: 100%;
+	font-size: 70px;
+	font-weight: bold;
+	text-align: center;
+	color: #b3b3b3;
+	color: rgba(255, 255, 255, 0.3);
+	text-shadow: -1px -1px rgba(0, 0, 0, 0.2);
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	-ms-text-rendering: optimizeLegibility;
+	-o-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+}
+#login p, #login b {
+    margin:10px;
+}

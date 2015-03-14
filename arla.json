@@ -1,0 +1,7 @@
+{
+	"services": {
+		"webclient": {
+			"port": "3000"
+		}
+	}
+}
