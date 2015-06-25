@@ -27,6 +27,9 @@ run: build
 		-e DEBUG=true \
 		arla/todomvc
 
+test: build
+	echo "ok"
+
 release: build
 	docker push arla/todomvc
 
@@ -35,4 +38,4 @@ clean:
 	rm -rf ./node_modules
 	docker rmi arla/todomvc || echo 'ok'
 
-.PHONY: default build run release clean enter
+.PHONY: default build test run release clean enter
