@@ -15,5 +15,5 @@ deployment:
         branch: master
         commands:
             - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-            - make release 
-            - curl --fail -d '-p 8000:80 -v /var/lib/state/todomvc:/var/state -e AUTH_SECRET=testing -e DEBUG=true' "http://beta.kiloe.net:8080/?service=todomvc&image=arla/todomvc&token=$CDD_TOKEN"
+            - make release
+            - curl --fail -d '-p 8000:80 -v /var/lib/state/todomvc:/var/state -e AUTH_SECRET=testing -e DEBUG=true' "http://cdd.beta.kiloe.net/?service=todomvc&image=arla/todomvc&token=$CDD_TOKEN"
