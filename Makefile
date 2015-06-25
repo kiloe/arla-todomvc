@@ -20,9 +20,9 @@ build: Dockerfile
 run: build
 	docker run \
 		-it --rm \
-		-p 3000:3000 \
+		-p 3000:80 \
 		--name todomvc \
-		-v $(PWD)/data:/var/lib/arla/data \
+		-v $(PWD)/data:/var/state \
 		-e AUTH_SECRET=testing \
 		-e DEBUG=true \
 		arla/todomvc
@@ -36,6 +36,7 @@ release: build
 clean:
 	rm -f Dockerfile
 	rm -rf ./node_modules
+	docker rm -f todomvc
 	docker rmi arla/todomvc || echo 'ok'
 
 .PHONY: default build test run release clean enter
