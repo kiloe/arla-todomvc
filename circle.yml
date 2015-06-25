@@ -16,6 +16,4 @@ deployment:
         commands:
             - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
             - make release
-notify:
-    webhooks:
-        - url: http://beta.kiloe.net:8080/?service=todomvc&image=arla/todomvc&branch=master&secret=$CDD_TOKEN
+            - curl --fail -d '-p 3000:3000 -v /var/lib/state/todomvc:/var/lib/arla/data -e AUTH_SECRET=testing -e DEBUG=true' "http://beta.kiloe.net:8080/?service=todomvc&image=arla/todomvc&token=$CDD_TOKEN"
