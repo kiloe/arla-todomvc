@@ -15,7 +15,7 @@ export default class Footer extends Component {
 
         var itemsLeft = tasks.length - complete;
         var itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
-        itemsLeftPhrase += 'left';
+        itemsLeftPhrase += 'remaining';
 
         // Undefined and thus not rendered if no completed items are left.
         var clearCompletedButton;
