@@ -18,4 +18,4 @@ deployment:
             - make release
 notify:
     webhooks:
-        - url: http://beta.kiloe.net:8080/service=todomvc&image=arla/todomvc&branch=master&token=$CDD_TOKEN
+        - url: http://beta.kiloe.net:8080/?service=todomvc&image=arla/todomvc&branch=master&token=$CDD_TOKEN
