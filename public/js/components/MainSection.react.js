@@ -9,7 +9,7 @@ export default class MainSection extends Component {
         let tasks = this.props.tasks || [];
 
         // This section should be hidden by default
-        // and shown when there are todos.
+        // and shown when there are todos remaining.
         if (tasks.length === 0) {
             return null;
         }
