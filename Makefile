@@ -15,7 +15,7 @@ Dockerfile:
 	/bin/echo -e "$$dockerfile" > Dockerfile
 
 build: Dockerfile
-	docker build -t arla/todomvc .
+	docker build -t arla/todomvc$(TAG) .
 
 run: build
 	docker run \
@@ -25,13 +25,13 @@ run: build
 		-v $(PWD)/data:/var/state \
 		-e AUTH_SECRET=testing \
 		-e DEBUG=true \
-		arla/todomvc
+		arla/todomvc$(TAG)
 
 test: build
 	echo "ok"
 
 release: build
-	docker push arla/todomvc
+	docker push arla/todomvc$(TAG)
 
 clean:
 	rm -f Dockerfile
