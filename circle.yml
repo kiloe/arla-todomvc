@@ -1,24 +1,24 @@
 machine:
-    services:
-        - docker
+  services:
+    - docker
 dependencies:
-    pre:
-        - sudo apt-get install build-essential
-        - make build
-    override:
-        - docker info
+  pre:
+    - sudo apt-get install build-essential
+    - make build
+  override:
+    - docker info
 test:
-    override:
-        - make test
+  override:
+    - make test
 deployment:
-    beta:
-        branch: master
-        commands:
-            - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-            - TAG=":beta" make release
-            - curl --fail "http://cdd.beta.kiloe.net/todomvc?token=$CDD_TOKEN"
-        branch: production
-        commands:
-            - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-            - TAG=":stable" make release
-            - curl --fail "http://cdd.stable.kiloe.net/todomvc?token=$CDD_TOKEN"
+  beta:
+    - branch: master
+      commands:
+        - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+        - TAG=":beta" make release
+        - curl --fail "http://cdd.beta.kiloe.net/todomvc?token=$CDD_TOKEN"
+    - branch: production
+      commands:
+        - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+        - export TAG=":stable"; make release
+        - curl --fail "http://cdd.stable.kiloe.net/todomvc?token=$CDD_TOKEN"
