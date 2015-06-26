@@ -16,9 +16,9 @@ deployment:
         commands:
             - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
             - TAG=":beta" make release
-            - curl --fail "http://cdd.beta.kiloe.net/todomvc&token=$CDD_TOKEN"
+            - curl --fail "http://cdd.beta.kiloe.net/todomvc?token=$CDD_TOKEN"
         branch: production
         commands:
             - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
             - TAG=":stable" make release
-            - curl --fail "http://cdd.stable.kiloe.net/todomvc&token=$CDD_TOKEN"
+            - curl --fail "http://cdd.stable.kiloe.net/todomvc?token=$CDD_TOKEN"
