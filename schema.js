@@ -1,6 +1,6 @@
 
 // The root entity is a propertyless entity that sets up
-// the data that is visible to the currently logged in member.
+// the data that visible to the currently logged in member.
 //
 // All arla queries start start as edges off of the special "root" entity
 //
