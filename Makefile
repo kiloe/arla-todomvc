@@ -1,4 +1,4 @@
-default: build
+default: all
 
 SHELL := /bin/bash
 PWD := $(shell pwd)
@@ -14,18 +14,29 @@ export dockerfile
 Dockerfile:
 	/bin/echo -e "$$dockerfile" > Dockerfile
 
-build: Dockerfile
+schema.js:
+	cat schema/* > schema.js
+
+actions.js:
+	cat actions/* > actions.js
+
+public/js/datastore.js: actions.js
+	docker run -it --rm --name todomvc \
+		-v $(PWD)/actions.js:/var/lib/arla/app/actions.js \
+		arla/10k -generate-client > public/js/datastore.js
+
+all: Dockerfile public/js/datastore.js schema.js actions.js
+
+build: all
 	docker build -t arla/todomvc$(TAG) .
 
-run: build
-	docker run \
-		-it --rm \
+run: all
+	docker run -it --rm --name todomvc \
 		-p 3000:80 \
-		--name todomvc \
 		-v $(PWD)/data:/var/state \
+		-v $(PWD):/var/lib/arla/app \
 		-e AUTH_SECRET=testing \
-		-e DEBUG=true \
-		arla/todomvc$(TAG)
+		arla/10k
 
 test: build
 	echo "ok"
@@ -34,9 +45,12 @@ release: build
 	docker push arla/todomvc$(TAG)
 
 clean:
+	rm -f schema.js
+	rm -f actions.js
+	rm -f public/js/datastore.js
 	rm -f Dockerfile
 	rm -rf ./node_modules
-	docker rm -f todomvc
-	docker rmi arla/todomvc || echo 'ok'
+	docker rm -f todomvc || echo 'ok'
+	docker rmi -f arla/todomvc || echo 'ok'
 
 .PHONY: default build test run release clean enter
