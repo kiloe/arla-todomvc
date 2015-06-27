@@ -21,7 +21,7 @@ actions.js:
 	cat actions/* > actions.js
 
 public/js/datastore.js: actions.js
-	docker run -it --rm --name todomvc \
+	docker run -it --name todomvc \
 		-v $(PWD)/actions.js:/var/lib/arla/app/actions.js \
 		arla/10k -generate-client > public/js/datastore.js
 
@@ -31,6 +31,7 @@ build: all
 	docker build -t arla/todomvc$(TAG) .
 
 run: all
+	docker rm -f todomvc || echo 'ok'
 	docker run -it --rm --name todomvc \
 		-p 3000:80 \
 		-v $(PWD)/data:/var/state \
