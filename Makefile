@@ -11,8 +11,10 @@ PWD := $(shell pwd)
 #--------------------------------------
 
 # fix issue where removing containers breaks ci
-ifneq ($(CIRCLECI),true)
-RM := --rm
+ifeq ($(CIRCLECI),true)
+RM := -rm=false
+else
+RM := -rm=true
 endif
 
 #--------------------------------------
