@@ -1,9 +1,8 @@
 {
-  "name": "todomvc-arla",
+  "name": "arla-app",
   "version": "0.0.1",
-  "description": "Example Arla/React architecture.",
-  "repository": "https://github.com/kiloe/arla-todomvc",
-  "main": "public/js/app.js",
+  "description": "Arla/React Application.",
+  "main": "src/app.js",
   "dependencies": {
     "kefir": "^1.1.0",
     "node-uuid": "^1.4.2",
@@ -14,18 +13,9 @@
     "babelify": "^5.0.3",
     "browserify": "^9.0.3"
   },
-  "scripts": {
-    "start": "watchify public/js/app.js -o public/js/app.bundle.js -v -d .",
-    "build": "browserify public/js/app.js --modules common -o public/js/app.bundle.js",
-    "test": "jest"
-  },
-  "author": "Chris Farmiloe",
   "browserify": {
     "transform": [
       "babelify"
     ]
-  },
-  "jest": {
-    "rootDir": "./public/js"
   }
 }
