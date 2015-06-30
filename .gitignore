@@ -1,4 +1,6 @@
 data/*
 node_modules/*
 Dockerfile
-app/*
+actions.js
+schema.js
+public/index.js
