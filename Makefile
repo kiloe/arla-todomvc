@@ -16,58 +16,40 @@ endif
 
 SHELL := /bin/bash
 PWD := $(shell pwd)
-RUN := docker run -it $(RM) --entrypoint=/bin/bash -v $(PWD):/app arla/10k -c
+BASE := arla/10k
+RUN := docker run -it $(RM) -v $(PWD):/app -w /app
+BASH := $(RUN) --entrypoint /bin/bash $(BASE)
+BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
 
 #--------------------------------------
 
 define dockerfile
 FROM arla/10k
-COPY . /var/lib/arla/app
+COPY . /app
 endef
 export dockerfile
 
 #--------------------------------------
 
 # generate a Dockfile
-app/Dockerfile: app
-	mkdir -p app
+Dockerfile: all
 	/bin/echo -e "$$dockerfile" > $@
 
-# copy all static assets
-app/public: $(wildcard public/**/*)
-	mkdir -p app
-	cp -r ./public $@
-
 # generate the schema file (just concat of all files)
-app/schema.js:
-	mkdir -p app
+schema.js: $(wildcard schema/*)
 	cat schema/* > $@
 
 # generate the action file (just concat of all files)
-app/actions.js:
+actions.js: $(wildcard actions/*)
 	mkdir -p app
 	cat actions/* > $@
 
-# generate an arla client library
-src/datastore.js: app/actions.js
-	docker run -it $(RM) \
-		-v $(PWD)/app/actions.js:/var/lib/arla/app/actions.js \
-		arla/10k -generate-client > $@
-
-# install dependencies from npm
-node_modules: package.json
-	$(RUN) \
-		"cd /app && npm install && npm install babelify uglifyify && chmod -R 666 $@"
-
-# compile all sources into main index.js
-# The weird /tmp/out is to workaround an issuing with timestamp inconsistancies
-app/public/index.js: src/index.js src/datastore.js node_modules $(wildcard src/**/*)
-	mkdir -p app/public
-	$(RUN) \
-		"cd /app && browserify $< -t babelify -t uglifyify --modules common -o $@ && chmod 666 $@"
+# generate the client
+public/index.js:
+	$(BROWSERIFY) src/index.js > $@
 
 # generate all app targets
-all: app/public app/public/index.js app/schema.js app/actions.js
+all: schema.js actions.js public/index.js
 
 #--------------------------------------
 
@@ -86,8 +68,15 @@ run: all
 	docker run -it $(RM) \
 		-p 3000:80 \
 		-v $(PWD)/data:/var/state \
-		-v $(PWD)/app:/var/lib/arla/app \
-		-e AUTH_SECRET=testing \
+		-v $(PWD):/app \
+		arla/10k
+
+# start the app in a development mode
+enter: all
+	docker run -it $(RM) \
+		--entrypoint /bin/bash \
+		-v $(PWD)/data:/var/state \
+		-v $(PWD):/app \
 		arla/10k
 
 #--------------------------------------
@@ -100,19 +89,19 @@ test:
 
 # repeatadly rebuild app/public/index.js whenever a file changes
 watch: all
-	watchify src/index.js -t babelify --modules common -o app/public/index.js
+	watchify src/index.js -t babelify --modules common -o index.js
 
 #--------------------------------------
 
 # tidy up
 clean:
-	rm -rf app
-	rm -f src/datastore.js
+	rm -f actions.js
+	rm -f schema.js
 	rm -f npm-debug.log
-	$(RUN) 'cd /app && rm -rf node_modules'
+	rm -f public/index.js
 	docker rmi -f $(DOCKER_REPO_NAME)$(DOCKER_TAG_NAME) 1>/dev/null 2>/dev/null \
 		|| true
 
 #--------------------------------------
 
-.PHONY: default build test watch run release clean
+.PHONY: default build test watch run release enter clean

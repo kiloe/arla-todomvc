@@ -8,5 +8,8 @@
     "node-uuid": "^1.4.2",
     "react": "^0.13.0-beta.1",
     "whatwg-fetch": "^0.7.0"
+  },
+  "devDependencies": {
+    "babelify": "^6.1.2"
   }
 }

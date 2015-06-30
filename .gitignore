@@ -2,4 +2,3 @@ data/*
 node_modules/*
 Dockerfile
 app/*
-src/datastore.js
