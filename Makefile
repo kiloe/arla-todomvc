@@ -18,7 +18,8 @@ SHELL := /bin/bash
 PWD := $(shell pwd)
 BASE := arla/10k
 RUN := docker run -it $(RM) -v $(PWD):/app -w /app
-BASH := $(RUN) --entrypoint /bin/bash $(BASE)
+NPM := $(RUN) --entrypoint /usr/bin/npm $(BASE)
+DELETE := $(RUN) --entrypoint /bin/rm $(BASE)
 BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
 WATCHIFY := $(RUN) --entrypoint /usr/local/bin/watchify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
 
@@ -42,15 +43,15 @@ schema.js: $(wildcard schema/*)
 
 # generate the action file (just concat of all files)
 actions.js: $(wildcard actions/*)
-	mkdir -p app
 	cat actions/* > $@
 
 # generate the client
-public/index.js:
+public/index.js: actions.js schema.js
+	$(NPM) install
 	$(BROWSERIFY) src/index.js > $@
 
 # generate all app targets
-all: schema.js actions.js public/index.js
+all: public/index.js
 
 #--------------------------------------
 
@@ -101,6 +102,7 @@ clean:
 	rm -f schema.js
 	rm -f npm-debug.log
 	rm -f public/index.js
+	$(DELETE) -rf node_modules
 	docker rmi -f $(DOCKER_REPO_NAME)$(DOCKER_TAG_NAME) 1>/dev/null 2>/dev/null \
 		|| true
 
