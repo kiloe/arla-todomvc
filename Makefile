@@ -1,6 +1,6 @@
 default: all
 
-DOCKER_REPO_NAME := arla/app
+DOCKER_REPO_NAME := arla/todomvc
 DOCKER_TAG_NAME := $(TAG)
 
 #--------------------------------------
@@ -32,7 +32,7 @@ export dockerfile
 #--------------------------------------
 
 # generate a Dockfile
-Dockerfile: all
+Dockerfile:
 	/bin/echo -e "$$dockerfile" > $@
 
 # generate the schema file (just concat of all files)
@@ -54,8 +54,8 @@ all: schema.js actions.js public/index.js
 #--------------------------------------
 
 # build into a self contained docker image
-build: all app/Dockerfile
-	docker build -t $(DOCKER_REPO_NAME)$(DOCKER_TAG_NAME) app
+build: Dockerfile all
+	docker build -t $(DOCKER_REPO_NAME)$(DOCKER_TAG_NAME) .
 
 # push the built image to docker hub
 release: build
@@ -87,7 +87,7 @@ test:
 
 #--------------------------------------
 
-# repeatadly rebuild app/public/index.js whenever a file changes
+# repeatadly rebuild public/index.js whenever a file changes
 watch: all
 	watchify src/index.js -t babelify --modules common -o index.js
 
@@ -95,6 +95,7 @@ watch: all
 
 # tidy up
 clean:
+	rm -f Dockerfile
 	rm -f actions.js
 	rm -f schema.js
 	rm -f npm-debug.log
