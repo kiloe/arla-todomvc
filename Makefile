@@ -20,6 +20,7 @@ BASE := arla/10k
 RUN := docker run -it $(RM) -v $(PWD):/app -w /app
 BASH := $(RUN) --entrypoint /bin/bash $(BASE)
 BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
+WATCHIFY := $(RUN) --entrypoint /usr/local/bin/watchify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
 
 #--------------------------------------
 
@@ -89,7 +90,7 @@ test:
 
 # repeatadly rebuild public/index.js whenever a file changes
 watch: all
-	watchify src/index.js -t babelify --modules common -o index.js
+	$(WATCHIFY) index.js -o public/index.js
 
 #--------------------------------------
 
