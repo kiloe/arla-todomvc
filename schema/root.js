@@ -41,7 +41,10 @@ export var root = {
 		viewer() {
 			return {
 				type: 'member',
-				query: `select * from member where id = $identity`
+				query: [`
+					select * from member
+					where id = $1
+				`, this.member_id]
 			}
 		},
 		// The all_tasks() call returns all the tasks that the member is
@@ -54,9 +57,9 @@ export var root = {
 				query: `
 					select distinct task.* from task
 					left join watcher on watcher.task_id = task.id
-					where watcher.member_id = $identity
-					or task.assignee_id = $identity
-					or task.owner_id = $identity
+					where watcher.member_id = '${this.member_id}'
+					or task.assignee_id = '${this.member_id}'
+					or task.owner_id = '${this.member_id}'
 					order by created_at
 				`
 			}

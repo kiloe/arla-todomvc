@@ -2,7 +2,17 @@ import Kefir from 'kefir';
 import {v4} from 'node-uuid';
 
 // import action names
-const ACTIONS = ['__ACTIONS_LIST__'];
+const ACTIONS = [
+	'createMember',
+	'createTask',
+	'destroyCompletedTasks',
+	'destroyTask',
+	'markTaskComplete',
+	'markTaskIncomplete',
+	'setTaskText',
+	'toggleAllTasks',
+	'updatePassword',
+];
 
 // polyfills
 import 'babelify/polyfill';
@@ -130,16 +140,17 @@ class Datastore {
 					return res.json()
 				case 400:
 					return res.json().then(o => {
-						console.log('datastore.post received err:', o.errors);
-						return Promise.reject(o.errors.join('\n'))
+						console.log('datastore.post received err:', o.error);
+						return Promise.reject(o.error)
 					})
 				case 403:
+				case 401:
 					this.tokens = null;
 					localStorage.removeItem('tokens');
 					this.setState(UNAUTHENTICATED);
 					return res.json().then(o => {
 						console.log('datastore.post got 403 response');
-						return Promise.reject(o.errors.join('\n'))
+						return Promise.reject(o.error)
 					})
 					return Promise.reject('invalid password');
 				default:
@@ -183,7 +194,7 @@ class Datastore {
 	login(username, password){
 		this.setState(AUTHENTICATING)
 		return new Promise( (resolve, reject) => {
-			this._post('/auth',{
+			this._post('/authenticate',{
 				username: username,
 				password: password
 			}).then(tokens => {

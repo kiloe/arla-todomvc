@@ -7,8 +7,7 @@ export var member = {
 		first_name  : {type: 'text'},
 		last_name   : {type: 'text'},
 		username    : {type: 'text', index:true},
-		email       : {type: 'text', index:true, nullable:true},
-
+		password    : {type: 'text'},
 	},
 
 	edges: {
