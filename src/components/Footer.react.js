@@ -1,53 +1,50 @@
 import React from 'react';
-import Component from './Component.js';
 import datastore from '../datastore';
 
-export default class Footer extends Component {
+export default class Footer extends React.Component {
 
-    render() {
-        var tasks = this.props.tasks || [];
+  static queries = (params,include) => {return{
+      Task: `complete`
+  }}
 
-        if (tasks.length === 0) {
-            return null;
-        }
+  render() {
+      var tasks = this.props.tasks || [];
 
-        var complete = tasks.filter(t => t.complete).length;
+      if (tasks.length === 0) {
+          return null;
+      }
 
-        var itemsLeft = tasks.length - complete;
-        var itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
-        itemsLeftPhrase += 'remaining';
+      var complete = tasks.filter(t => t.complete).length;
 
-        // Undefined and thus not rendered if no completed items are left.
-        var clearCompletedButton;
-        if (complete > 0) {
-            clearCompletedButton = <button
-                id="clear-completed"
-                onClick={this.clearCompleted.bind(this)}>
-                Clear completed ({complete})
-            </button>;
-        }
+      var itemsLeft = tasks.length - complete;
+      var itemsLeftPhrase = itemsLeft === 1 ? ' item ' : ' items ';
+      itemsLeftPhrase += 'remaining';
 
-        return (
-            <footer id="footer">
-                <span id="todo-count">
-                    <strong>
-                        {itemsLeft}
-                    </strong>
-                    {itemsLeftPhrase}
-                </span>
-                {clearCompletedButton}
-            </footer>
-        );
-    }
+      // Undefined and thus not rendered if no completed items are left.
+      var clearCompletedButton;
+      if (complete > 0) {
+          clearCompletedButton = <button
+              id="clear-completed"
+              onClick={this.clearCompleted.bind(this)}>
+              Clear completed ({complete})
+          </button>;
+      }
 
-    clearCompleted() {
-        datastore.destroyCompletedTasks();
-    }
+      return (
+          <footer id="footer">
+              <span id="todo-count">
+                  <strong>
+                      {itemsLeft}
+                  </strong>
+                  {itemsLeftPhrase}
+              </span>
+              {clearCompletedButton}
+          </footer>
+      );
+  }
+
+  clearCompleted() {
+      datastore.destroyCompletedTasks();
+  }
 
 }
-
-Footer.queries = (params,include) => {return{
-    Task: `
-        complete
-    `
-}}

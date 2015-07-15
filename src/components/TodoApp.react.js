@@ -1,14 +1,12 @@
-
 import Footer from './Footer.react';
 import Header from './Header.react';
 import MainSection from './MainSection.react';
 import React from 'react';
-import Component from './Component.js';
 
 // TodoApp is the main Component of the application. It has no state itself as
 // this is managed by it's owner (the generic App Component). Having no state
 // makes it simpler to test.
-export default class TodoApp extends Component {
+export default class TodoApp extends React.Component {
 
 	render() {
 		return (

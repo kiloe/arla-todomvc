@@ -164,9 +164,12 @@ class Datastore {
 		if( this._state != AUTHENTICATED ){
 			return Promise.reject(Error('cannot query datastore: not ready'))
 		}
-		return this._post('/query', getQuery(klass), {
+		return this._post('/query', {
+			query: getQuery(klass),
+			args: []
+		}, {
 			'Authorization': `bearer ${this.tokens.access_token}`,
-			'Content-Type': 'text/plain'
+			'Content-Type': 'application/json'
 		})
 	}
 

@@ -4,5 +4,5 @@ export function destroyCompletedTasks() {
 		delete from task
 		where complete = true
 		and (owner_id = $1 or assignee_id = $1)
-	`, this.member_id];
+	`, this.session.member_id];
 }

@@ -4,5 +4,5 @@ export function updatePassword(password) {
 		update member
 		set password = $1
 		where id = $2
-	`, password, this.member_id];
+	`, password, this.session.member_id];
 }

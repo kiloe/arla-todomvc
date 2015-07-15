@@ -1,5 +1,4 @@
 import React from 'react';
-import Component from './components/Component';
 import TodoApp from './components/TodoApp.react';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -7,7 +6,7 @@ import {datastore,AUTHENTICATING,REGISTERING,UNAUTHENTICATED,AUTHENTICATED} from
 
 // This is the generic App component. It's job is to handle authentication and
 // setup mapping of datastore.query to props for the main TodoApp Component.
-class App extends Component {
+class App extends React.Component {
 
 	// setup datastore listeners
 	componentWillMount(){

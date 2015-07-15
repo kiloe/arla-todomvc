@@ -1,9 +1,8 @@
 import React from 'react';
-import Component from './Component.js';
 
 const ENTER_KEY_CODE = 13;
 
-export default class TodoTextInput extends Component {
+export default class TodoTextInput extends React.Component {
 
     constructor(props){
         super(props);

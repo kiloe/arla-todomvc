@@ -20,7 +20,7 @@ BASE := arla/10k
 RUN := docker run -it $(RM) -v $(PWD):/app -w /app
 NPM := $(RUN) --entrypoint /usr/bin/npm $(BASE)
 DELETE := $(RUN) --entrypoint /bin/rm $(BASE)
-BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
+BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common --stage 0 ]
 WATCHIFY := $(RUN) --entrypoint /usr/local/bin/watchify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
 
 #--------------------------------------
@@ -45,9 +45,13 @@ schema.js: $(wildcard schema/*)
 actions.js: $(wildcard actions/*)
 	cat actions/* > $@
 
-# generate the client
-public/index.js: actions.js schema.js
+# install node_modules
+node_modules: package.json
 	$(NPM) install
+
+# generate the client
+public/index.js: node_modules actions.js schema.js
+	$(BROWSERIFY) src/index.js
 	$(BROWSERIFY) src/index.js > $@
 
 # generate all app targets
@@ -71,9 +75,9 @@ run: all
 		-p 3000:80 \
 		-v $(PWD)/data:/var/state \
 		-v $(PWD):/app \
-		arla/10k
+		arla/10k --secret abc123
 
-# start the app in a development mode
+# start a bash shell in the container with the app mounted
 enter: all
 	docker run -it $(RM) \
 		--entrypoint /bin/bash \

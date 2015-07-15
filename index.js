@@ -8,7 +8,9 @@ arla.configure({
   actions: actions,
   // data schema
   schema: schema,
-  // authenticate returns the token values for a given set of credentials
+  // authenticate checks credentials then returns the values
+  // which will be used as the "session" (claims) throughout
+  // the lifetime of the user's token.
   authenticate({username, password}){
     return [`
       select id as member_id from member
@@ -17,18 +19,20 @@ arla.configure({
     `, username, password]
   },
   // create returns a mutation that will be called to create a user.
+  // by returning a mutation you have the chance to hash any sensitive
+  // password data so that it does not end up in the data log.
   register({id, first_name, last_name, username, password}){
     return {
-      Token: {
-        member_id: db.query(`select uuid_generate_v4() as id`)[0].id
-      },
-      Name: "createMember",
-      Args: [{
+      name: "createMember",
+      args: [{
         first_name: first_name,
         last_name: last_name,
         username: username,
         password: pgcrypto.crypt(password),
-      }]
+      }],
+      token: {
+        member_id: db.query(`select uuid_generate_v4() as id`)[0].id
+      }
     }
   }
 })

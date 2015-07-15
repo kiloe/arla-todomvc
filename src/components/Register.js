@@ -1,8 +1,6 @@
-
 import React from 'react';
-import Component from './Component';
 
-export default class Register extends Component {
+export default class Register extends React.Component {
 
 	onSubmit(e){
 		e.preventDefault();

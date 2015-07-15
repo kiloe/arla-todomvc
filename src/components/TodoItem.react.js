@@ -1,10 +1,9 @@
 import React from 'react';
-import Component from './Component.js';
 import cx from 'react/lib/cx';
 import TodoTextInput from './TodoTextInput.react';
 import datastore from '../datastore';
 
-export default class TodoItem extends Component {
+export default class TodoItem extends React.Component {
 
 	constructor(props){
 		super(props);

@@ -1,9 +1,14 @@
 import React from 'react';
-import Component from './Component.js';
 import TodoTextInput from './TodoTextInput.react';
 import datastore from '../datastore';
 
-export default class Header extends Component {
+export default class Header extends React.Component {
+
+	static queries = (params,include) => { return {
+		User: `
+			first_name
+		`
+	} }
 
 	render() {
 		return (
@@ -29,9 +34,3 @@ export default class Header extends Component {
 	}
 
 }
-
-Header.queries = (params,include) => { return {
-	User: `
-		first_name
-	`
-} }

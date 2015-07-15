@@ -4,5 +4,5 @@ export function destroyTask(id){
 		delete from task
 		where id = $1
 		and (owner_id = $2 or assignee_id = $2)
-	`, id, this.member_id];
+	`, id, this.session.member_id];
 }
