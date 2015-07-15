@@ -27,6 +27,7 @@ WATCHIFY := $(RUN) --entrypoint /usr/local/bin/watchify $(BASE) -t [ /usr/local/
 
 define dockerfile
 FROM arla/10k
+ENV ARLA_SECRET=testing
 COPY . /app
 endef
 export dockerfile
