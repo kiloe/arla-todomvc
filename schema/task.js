@@ -1,7 +1,6 @@
 
 export class task {
 
-	static id          = {type: 'uuid'}
 	static text        = {type: 'text'}
 	static complete    = {type: 'boolean'}
 	static private     = {type: 'boolean'}

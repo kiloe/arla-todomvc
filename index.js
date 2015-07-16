@@ -34,5 +34,22 @@ arla.configure({
         member_id: db.query(`select uuid_generate_v4() as id`)[0].id
       }
     }
+  },
+  // version is a number that will be attached to all future mutations.
+  // it becomes important when you make breaking changes to your mutations
+  // in the future.
+  version: 1,
+  // transform is responsible for migrating old mutations to be
+  // compatible with new mutations. If a mutation with a version less
+  // than the current version (set above) is executed then the transform
+  // function will be run with the targetVersion.
+  // The default action is to just return the mutation as is with the latest
+  // version number.
+  // If the mutation that is returned is still not at the current version
+  // then the transformer will be applied again. This allows for incrementatal
+  // updates over time.
+  transform(mutation, targetVersion){
+    return Object.assign(mutation, {version:targetVersion});
   }
+
 })
