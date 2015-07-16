@@ -1,19 +1,6 @@
 import Kefir from 'kefir';
 import {v4} from 'node-uuid';
 
-// import action names
-const ACTIONS = [
-	'createMember',
-	'createTask',
-	'destroyCompletedTasks',
-	'destroyTask',
-	'markTaskComplete',
-	'markTaskIncomplete',
-	'setTaskText',
-	'toggleAllTasks',
-	'updatePassword',
-];
-
 // polyfills
 import 'babelify/polyfill';
 import 'whatwg-fetch';
@@ -93,16 +80,20 @@ class Datastore {
 		// stream of successful actions executed
 		this.actionRequests = Kefir.emitter();
 		// create methods for each listed action from actions.js
-		ACTIONS.forEach( k => {
-			if( this[k] ){
-				throw Error(`invalid action name: ${k}`)
-			}
-			this[k] = (...args) => {
-				this.actionRequests.emit({
-					name: k,
-					args: args
-				})
-			}
+		this.info = this._post('/info').then( (info) => {
+			console.info(info);
+			info.mutations.forEach( k => {
+				if( this[k] ){
+					throw Error(`invalid mutation name: ${k}`)
+				}
+				this[k] = (...args) => {
+					this.actionRequests.emit({
+						name: k,
+						args: args
+					})
+				}
+			})
+			return info;
 		})
 		// drain the actionRequest queue
 		this.actionResponses = this.actionRequests.flatMap( ({name,args}) => {

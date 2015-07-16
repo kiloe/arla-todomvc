@@ -21,12 +21,9 @@ export class member {
 	// The tasks() call fetches all the tasks for a member that are
 	// visible to the current viewer.
 	static tasks = {type:'array', of:'task', query: function(){
-		return `
-			select tasks.id, tasks.text, tasks.complete
-			from all_tasks
-			left join tasks on watcher.task_id = tasks.id
-			where watcher.member_id = $this.id
-			or tasks.assignee_id = $this.id
-		`
+		return [`
+			select id, text, complete from task
+			where owner_id = $1
+		`, this.session.member_id]
 	}}
 }

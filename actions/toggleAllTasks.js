@@ -6,6 +6,6 @@ export function toggleAllTasks() {
 		)
 		update task
 		set complete = not (select complete from tasks)
-		where (owner_id = $1 or assignee_id = $1)
+		where owner_id = $1
 	`, this.session.member_id];
 }

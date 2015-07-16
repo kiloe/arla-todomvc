@@ -42,31 +42,7 @@ export class root {
 	// currently logged in member fields.
 	static viewer = {type:'member', query: function(){
 		return [`
-			select * from member
-			where id = $1
+			select * from member where id = $1
 		`, this.session.member_id]
-	}}
-
-	// The all_tasks() property returns all the tasks that the member is
-	// authorized to see. In this case it's all the tasks that are
-	// either owned by, assigned to or being watched by the current member.
-	static tasks = {type:'array', of:'task', query: function(){
-		return [`
-			select distinct task.* from task
-			left join watcher on watcher.task_id = task.id
-			where watcher.member_id = $1
-			or task.assignee_id = $1
-			or task.owner_id = $1
-			order by created_at
-		`, this.session.member_id]
-	}}
-
-	// The users property returns all the users that the current viewer
-	// is able to see. We limit the fields available here so as not
-	// to leak any private fields to other users.
-	static users = {type:'array', of:'member', query:function(){
-		return `
-			select id,first_name,last_name from member
-		`
 	}}
 }

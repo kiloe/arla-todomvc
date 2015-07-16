@@ -5,6 +5,14 @@ import datastore from '../datastore';
 
 export default class TodoItem extends React.Component {
 
+	// define the task fields required 
+	static queries = params => {return{
+		Task: `
+			complete
+			text
+		`
+	}}
+
 	constructor(props){
 		super(props);
 		this.state = {isEditing: false};
@@ -75,10 +83,3 @@ export default class TodoItem extends React.Component {
 	}
 
 }
-
-TodoItem.queries = params => {return{
-	Task: `
-		complete
-		text
-	`
-}}

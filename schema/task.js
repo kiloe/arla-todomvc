@@ -3,11 +3,8 @@ export class task {
 
 	static text        = {type: 'text'}
 	static complete    = {type: 'boolean'}
-	static private     = {type: 'boolean'}
 	static created_at  = {type: 'timestamptz', def:'now()'}
 	static owner_id    = {type: 'uuid'}
-	static assignee_id = {type: 'uuid'}
-	static watcher_ids = {type: 'uuid[]', def:"'{}'::uuid[]"}
 
 	// beforeChange is a hook that will be triggered on every
 	// INSERT or UPDATE of the task. Within the function "this"
@@ -34,18 +31,4 @@ export class task {
 		`, this.owner_id]
 	}}
 
-	static assignee = {type:'member', query: function(){
-		return [`
-			select id,first_name,last_name
-			from member where id = $1
-		`, this.assignee_id]
-	}}
-
-	static watchers = {type: 'array', of: 'member', query: function(){
-		return [`
-			select member.id, member.first_name, member.last_name
-			from member
-			where member.id in $1
-		`, this.watcher_ids]
-	}}
 }

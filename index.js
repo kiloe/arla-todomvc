@@ -18,7 +18,7 @@ arla.configure({
       and password = crypt($2, password)
     `, username, password]
   },
-  // create returns a mutation that will be called to create a user.
+  // register returns a mutation that will be called to create a user record.
   // by returning a mutation you have the chance to hash any sensitive
   // password data so that it does not end up in the data log.
   register({id, first_name, last_name, username, password}){
@@ -40,7 +40,7 @@ arla.configure({
   // in the future.
   version: 1,
   // transform is responsible for migrating old mutations to be
-  // compatible with new mutations. If a mutation with a version less
+  // compatible with new actions. If a mutation with a version less
   // than the current version (set above) is executed then the transform
   // function will be run with the targetVersion.
   // The default action is to just return the mutation as is with the latest
@@ -48,6 +48,8 @@ arla.configure({
   // If the mutation that is returned is still not at the current version
   // then the transformer will be applied again. This allows for incrementatal
   // updates over time.
+  // This is not actually used for anything in todomvc since everything will
+  // be version=1 ... it's just for show and tell
   transform(mutation, targetVersion){
     return Object.assign(mutation, {version:targetVersion});
   }

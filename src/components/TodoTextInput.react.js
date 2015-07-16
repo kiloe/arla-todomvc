@@ -4,46 +4,46 @@ const ENTER_KEY_CODE = 13;
 
 export default class TodoTextInput extends React.Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            value: props.value || ''
-        };
-    }
+  constructor(props){
+    super(props);
+    this.state = {
+      value: props.value || ''
+    };
+  }
 
-    save() {
-        this.props.onSave(this.state.value);
-        this.setState({
-            value: ''
-        });
-    }
+  save() {
+    this.props.onSave(this.state.value);
+    this.setState({
+      value: ''
+    });
+  }
 
-    onChange(event) {
-        this.setState({
-            value: event.target.value
-        });
-    }
+  onChange(event) {
+    this.setState({
+      value: event.target.value
+    });
+  }
 
-    onKeyDown(event) {
-        if (event.keyCode === ENTER_KEY_CODE) {
-            this.save();
-        }
+  onKeyDown(event) {
+    if (event.keyCode === ENTER_KEY_CODE) {
+      this.save();
     }
+  }
 
-    render() {
-        return (
-            <input
-                className={this.props.className}
-                id={this.props.id}
-                placeholder={this.props.placeholder}
-                onBlur={this.save.bind(this)}
-                onChange={this.onChange.bind(this)}
-                onKeyDown={this.onKeyDown.bind(this)}
-                value={this.state.value}
-                autoFocus={true}
-            />
-        );
-    }
+  render() {
+    return (
+      <input
+        className={this.props.className}
+        id={this.props.id}
+        placeholder={this.props.placeholder}
+        onBlur={this.save.bind(this)}
+        onChange={this.onChange.bind(this)}
+        onKeyDown={this.onKeyDown.bind(this)}
+        value={this.state.value}
+        autoFocus={true}
+      />
+    );
+  }
 
 
 }

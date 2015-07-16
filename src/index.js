@@ -79,6 +79,9 @@ class App extends React.Component {
 				</div>
 			);
 		case AUTHENTICATED:
+			if( !this.state.data ){
+				return <div>loading</div>;
+			}
 			return <TodoApp {...this.state.data} logout={this.logout.bind(this)}/>
 		}
 	}
