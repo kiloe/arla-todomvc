@@ -4,13 +4,13 @@ import datastore from '../datastore';
 
 export default class MainSection extends React.Component {
 
-  static queries = (params,include) => {return{
-      Task: `
-        id
-        complete
-        ${include(TodoItem,'Task')}
-      `
-  }}
+  static queries = {
+    Task: () => `
+      id
+      complete
+      ${TodoItem.queries.Task()}
+    `
+  }
 
   render() {
       let tasks = this.props.tasks || [];
@@ -42,7 +42,7 @@ export default class MainSection extends React.Component {
   }
 
   toggleCompleteAll() {
-      datastore.toggleAllTasks();
+    datastore.toggleAllTasks();
   }
 
 }

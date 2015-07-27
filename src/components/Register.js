@@ -1,10 +1,12 @@
 import React from 'react';
+import uuid from 'uuid';
 
 export default class Register extends React.Component {
 
 	onSubmit(e){
 		e.preventDefault();
 		this.props.onSubmit({
+			id: uuid.v4(),
 			first_name: this.refs.first_name.getDOMNode().value,
 			last_name: this.refs.last_name.getDOMNode().value,
 			username: this.refs.username.getDOMNode().value,

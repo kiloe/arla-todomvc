@@ -20,8 +20,9 @@ BASE := arla/10k
 RUN := docker run -it $(RM) -v $(PWD):/app -w /app
 NPM := $(RUN) --entrypoint /usr/bin/npm $(BASE)
 DELETE := $(RUN) --entrypoint /bin/rm $(BASE)
-BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common --stage 0 ]
-WATCHIFY := $(RUN) --entrypoint /usr/local/bin/watchify $(BASE) -t [ /usr/local/lib/node_modules/babelify --modules common ]
+BABELOPTS := --debug -t [ /usr/local/lib/node_modules/babelify --modules common --stage 0 --sourceMap --sourceMapRelative . ]
+BROWSERIFY := $(RUN) --entrypoint /usr/local/bin/browserify $(BASE) $(BABELOPTS)
+WATCHIFY := $(RUN) --entrypoint /usr/local/bin/watchify $(BASE) $(BABELOPTS)
 
 #--------------------------------------
 
@@ -52,8 +53,7 @@ node_modules: package.json
 
 # generate the client
 public/index.js: node_modules actions.js schema.js
-	$(BROWSERIFY) src/index.js
-	$(BROWSERIFY) src/index.js > $@
+	$(BROWSERIFY) src/index.js > $@ || (cat $@ && false)
 
 # generate all app targets
 all: public/index.js

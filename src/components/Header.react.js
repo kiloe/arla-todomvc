@@ -1,14 +1,15 @@
 import React from 'react';
 import TodoTextInput from './TodoTextInput.react';
+import uuid from 'uuid';
 import datastore from '../datastore';
 
 export default class Header extends React.Component {
 
-	static queries = (params,include) => { return {
-		User: `
+	static queries = {
+		User: () => `
 			first_name
 		`
-	} }
+	}
 
 	render() {
 		return (
@@ -23,13 +24,12 @@ export default class Header extends React.Component {
 		);
 	}
 
-	create(text) {
+	create(text){
 		if( text.trim() ){
 			datastore.createTask({
-                id: datastore.uuid(),
-                text: text,
-                member_id: datastore.userId()
-            })
+				id: uuid.v4(),
+				text: text,
+			})
 		}
 	}
 

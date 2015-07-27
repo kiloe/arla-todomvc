@@ -3,9 +3,11 @@ import datastore from '../datastore';
 
 export default class Footer extends React.Component {
 
-  static queries = (params,include) => {return{
-      Task: `complete`
-  }}
+  static queries = {
+    Task: () => `
+      complete
+    `
+  }
 
   render() {
       var tasks = this.props.tasks || [];
@@ -44,7 +46,7 @@ export default class Footer extends React.Component {
   }
 
   clearCompleted() {
-      datastore.destroyCompletedTasks();
+    datastore.destroyCompletedTasks();
   }
 
 }

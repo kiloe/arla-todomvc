@@ -1,5 +1,5 @@
 // This function creates a new member.
-export function createMember({first_name, last_name, username, password}) {
+export function createMember({id, first_name, last_name, username, password}) {
 	// The replay flag can be used to coerse old data into a new format
 	if( this.replay ){
 		if( username.length < 20 ){
@@ -11,5 +11,5 @@ export function createMember({first_name, last_name, username, password}) {
 		insert into member (
 			id, first_name, last_name, username, password
 		) values ($1, $2, $3, $4, $5)
-	`, this.session.member_id, first_name, last_name, username, password]
+	`, id, first_name, last_name, username, password]
 }

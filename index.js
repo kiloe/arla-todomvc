@@ -25,14 +25,12 @@ arla.configure({
     return {
       name: "createMember",
       args: [{
+        id: id,
         first_name: first_name,
         last_name: last_name,
         username: username,
         password: pgcrypto.crypt(password),
-      }],
-      token: {
-        member_id: db.query(`select uuid_generate_v4() as id`)[0].id
-      }
+      }]
     }
   },
   // version is a number that will be attached to all future mutations.

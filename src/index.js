@@ -2,68 +2,73 @@ import React from 'react';
 import TodoApp from './components/TodoApp.react';
 import Login from './components/Login';
 import Register from './components/Register';
-import {datastore,AUTHENTICATING,REGISTERING,UNAUTHENTICATED,AUTHENTICATED} from './datastore';
+import datastore from './datastore';
+
+// queryFor returns a query builder function. It will Ask
+// each React.Component what data it requires and build the query
+function queryFor(component){
+	return function(){
+		return component.queries.root()
+	}
+}
 
 // This is the generic App component. It's job is to handle authentication and
 // setup mapping of datastore.query to props for the main TodoApp Component.
 class App extends React.Component {
 
 	// setup datastore listeners
-	componentWillMount(){
-		console.log('mounting');
+	constructor(props){
+		super(props);
+
+		// init state
+		this.state = {
+			authenticated: false,
+			data: null
+		};
+
+		// track authenticated state changes
+		datastore.on('change', state => {
+			this.setState({authenticated: state == 'authenticated'});
+		})
+
 		// listen for query results and assign them to state.data
 		// nothing will flow into this stream until the
-		// datastore is in an ONLINE state (which means calling login or register)
-		this.query = datastore.queryStream(TodoApp).onValue(v => {
-			this.setState({data: v});
-		}).onError(err => {
-			console.warn('query failed:', err);
-		})
-		// keep track of state of the datastore (sign in/out)
-		this.auth = datastore.stateStream().onValue( state => {
-			this.setState({authentication: state});
-			if( state == UNAUTHENTICATED ){
-				this.setState({data: null});
-			}
-		})
-		datastore.state.log();
+		// datastore is in an AUTHENTICATED state
+		this.query = datastore.prepare(queryFor(TodoApp))
+			.on('data', data => {
+				this.setState({data: data});
+			})
+			.on('error', err => {
+				console.warn('query failed:', err)
+			})
+			.poll(20000);
 	}
 
 	// Stop listening to datastore
 	componentWillUnmount(){
-		console.log('unounting');
-		this.query.destroy();
-		this.auth.destroy();
+		this.query.stop();
 	}
 
 	// signin
 	login({username, password}) {
-		this.setState({loginError: null});
-		datastore.login(username, password).catch(err => {
-			this.setState({loginError: err});
-		})
+		datastore.connect({username, password})
 	}
 
 	// signin
 	logout(e) {
 		e.preventDefault();
-		datastore.logout();
+		datastore.deauthenticate();
+		this.setState({data: null});
 	}
 
 	// signup
 	register(profile) {
-		this.setState({registerError: null});
-		datastore.register(profile).catch(err => {
-			this.setState({registerError: err});
-		})
+		datastore.register(profile);
 	}
 
 	// handle authentication states and render the real app with props
 	render() {
-		switch(this.state.authentication){
-		case UNAUTHENTICATED:
-		case AUTHENTICATING:
-		case REGISTERING:
+		if( !this.state.authenticated ){
 			return (
 				<div id="login">
 					<header id="header">
@@ -78,12 +83,18 @@ class App extends React.Component {
 					<b>{this.state.registerError}</b>
 				</div>
 			);
-		case AUTHENTICATED:
-			if( !this.state.data ){
-				return <div>loading</div>;
-			}
-			return <TodoApp {...this.state.data} logout={this.logout.bind(this)}/>
 		}
+		if( !this.state.data ){
+			return (
+				<div id="login">
+					<header id="header">
+						<h1>todos</h1>
+					</header>
+					<h2>Loading...</h2>
+				</div>
+			);
+		}
+		return <TodoApp {...this.state.data} logout={this.logout.bind(this)}/>
 	}
 }
 

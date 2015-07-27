@@ -8,19 +8,15 @@ import React from 'react';
 // makes it simpler to test.
 export default class TodoApp extends React.Component {
 
-	// This is the query builder that will be called by datastore.query in App.
-	// The include param is a function that will lookup the next part of the query
-	// from the given child Components.
-	// The root of the query graph is the currently logged in user. Each top-level
-	// attribute is either a property or an edge as defined in schema.js
-	static query = (params,include) => {
-		return `
+	// The "root" query is the top of the query tree
+	static queries = {
+		root: () => `
 			user:viewer() {
 				first_name
-				${include(Header, 'User')}
-				tasks() {
-					${include(MainSection, 'Task')}
-					${include(Footer, 'Task')}
+				${Header.queries.User()}
+				tasks().sort(id) {
+					${MainSection.queries.Task()}
+					${Footer.queries.Task()}
 				}
 			}
 		`
