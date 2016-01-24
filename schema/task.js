@@ -15,7 +15,7 @@ export class task {
 		}
 	}
 
-	// the owner proeprty returns the member entity by looking
+	// the owner property returns the member entity by looking
 	// up the owner_id field on this record.
 	// this.owner_id referrs to the current record's owner_id field.
 	// It is important to note that this.owner_id is NOT a literal
